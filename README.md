@@ -1,4 +1,4 @@
-# Azure-Colo-HomeLab-Interconnect
+# Azure-Colo-Home-Interconnect
 
 resilient, three-node hybrid network bridging Public Cloud (Azure), a Colocation Data Center, and a local Home Lab environment. This project demonstrates a full-mesh VPN topology with automated failover and secure P2P remote access.
 
