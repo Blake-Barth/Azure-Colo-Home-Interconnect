@@ -12,10 +12,10 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 ![Network Diagram](./images/hybrid-mesh.png)
 
 ### Connectivity Breakdown
-* **Azure VNet:** `10.10.0.0/16` (Hub)
-* **Colo DC:** `TBD` (Spoke A)
-* **Home Lab:** `TBD` (Spoke B)
-* **P2S VPN (Mobile):** `TBD` (Remote Access)
+* **Azure VNet:** `192.168.100.0/24`
+* **Colo DC:** `10.252.1.0/25`
+* **Home Lab:** `192.168.88.0/24`
+* **P2S VPN (Mobile):** `172.18.12.0/24`
 
 ---
 
@@ -30,16 +30,16 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 ## 🛠️ Hardware & Tools
 | Location | Device/Provider | Tunnel Protocol |
 | :--- | :--- | :--- |
-| **Azure** | Virtual Network Gateway (VpnGw1) | IKEv2 / OpenVPN |
+| **Azure** | Virtual Network Gateway (Basic SKU) | IKEv2 / OpenVPN |
 | **Colo DC** | TBD | IPsec |
-| **Home Lab** | TBD | IPsec |
+| **Home Lab** | Mikrotik  | IPsec |
 
 ---
 
 ## 📝 Current Progress / Roadmap
-- [ ] Design network CIDR scheme (No overlaps)
-- [ ] Create Azure VNet and Gateway
-- [ ] Establish S2S Tunnel: Azure <-> Home Lab
+- [X] Design network CIDR scheme (No overlaps)
+- [X] Create Azure VNet and Gateway
+- [X] Establish S2S Tunnel: Azure <-> Home Lab
 - [ ] Establish S2S Tunnel: Azure <-> Colo DC
 - [ ] Configure P2S OpenVPN for iOS
 - [ ] Test cross-site latency and routing
