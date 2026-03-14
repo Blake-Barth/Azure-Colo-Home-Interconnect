@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworkGateways_SCUS_Interconnect_VNetGW_name": {
+            "defaultValue": "SCUS-Interconnect-VNetGW",
+            "type": "String"
+        },
+        "publicIPAddresses_SCUS_Interconnect_PIP_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/publicIPAddresses/SCUS-Interconnect-PIP",
+            "type": "String"
+        },
+        "virtualNetworks_SCUS_Interconnect_VNet_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/virtualNetworks/SCUS-Interconnect-VNet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')]",
+            "location": "southcentralus",
+            "properties": {
+                "enablePrivateIpAddress": false,
+                "virtualNetworkGatewayMigrationStatus": {
+                    "state": "None",
+                    "phase": "None"
+                },
+                "ipConfigurations": [
+                    {
+                        "name": "default",
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')), '/ipConfigurations/default')]",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[parameters('publicIPAddresses_SCUS_Interconnect_PIP_externalid')]"
+                            },
+                            "subnet": {
+                                "id": "[concat(parameters('virtualNetworks_SCUS_Interconnect_VNet_externalid'), '/subnets/GatewaySubnet')]"
+                            }
+                        }
+                    }
+                ],
+                "natRules": [],
+                "virtualNetworkGatewayPolicyGroups": [],
+                "enableBgpRouteTranslationForNat": false,
+                "disableIPSecReplayProtection": false,
+                "sku": {
+                    "name": "Basic",
+                    "tier": "Basic"
+                },
+                "gatewayType": "Vpn",
+                "vpnType": "RouteBased",
+                "enableBgp": false,
+                "enableHighBandwidthVpnGateway": false,
+                "activeActive": false,
+                "vpnGatewayGeneration": "Generation1",
+                "allowRemoteVnetTraffic": false,
+                "allowVirtualWanTraffic": false
+            }
+        }
+    ]
+}

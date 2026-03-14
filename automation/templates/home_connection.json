@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connections_SCUS_Interconnect_Connection_Home_name": {
+            "defaultValue": "SCUS-Interconnect-Connection-Home",
+            "type": "String"
+        },
+        "virtualNetworkGateways_SCUS_Interconnect_VNetGW_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/virtualNetworkGateways/SCUS-Interconnect-VNetGW",
+            "type": "String"
+        },
+        "localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/localNetworkGateways/SCUS-Interconnect-LocalNetworkGW",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('connections_SCUS_Interconnect_Connection_Home_name')]",
+            "location": "southcentralus",
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_externalid')]",
+                    "properties": {}
+                },
+                "localNetworkGateway2": {
+                    "id": "[parameters('localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_externalid')]",
+                    "properties": {}
+                },
+                "connectionType": "IPsec",
+                "connectionProtocol": "IKEv2",
+                "routingWeight": 0,
+                "enableBgp": false,
+                "useLocalAzureIpAddress": false,
+                "usePolicyBasedTrafficSelectors": false,
+                "ipsecPolicies": [],
+                "trafficSelectorPolicies": [],
+                "tunnelProperties": [],
+                "expressRouteGatewayBypass": false,
+                "enablePrivateLinkFastPath": false,
+                "dpdTimeoutSeconds": 45,
+                "connectionMode": "Default",
+                "gatewayCustomBgpIpAddresses": []
+            }
+        }
+    ]
+}
