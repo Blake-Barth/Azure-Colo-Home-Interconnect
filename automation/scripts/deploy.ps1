@@ -23,7 +23,7 @@ if ($null -eq $vnetGw -or $vnetGw.ProvisioningState -ne "Succeeded") {
     Write-Host "Deploying/Repairing VNet Gateway..." -ForegroundColor Yellow
     New-AzResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
-        -TemplateFile "./templates/vnet_gateway.json" `
+        -TemplateFile "../templates/vnet_gateway.json" `
         -Mode Incremental
 } else {
     Write-Host "VNet Gateway already exists and is healthy." -ForegroundColor Green
@@ -36,7 +36,7 @@ if ($null -eq $connection) {
     Write-Host "Deploying Home Connection..." -ForegroundColor Yellow
     New-AzResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
-        -TemplateFile "./templates/home_connection.json" `
+        -TemplateFile "../templates/home_connection.json" `
         -Mode Incremental
     
     Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan

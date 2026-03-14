@@ -15,7 +15,6 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 * **Azure VNet:** `192.168.100.0/24`
 * **Colo DC:** `10.252.1.0/25`
 * **Home Lab:** `192.168.88.0/24`
-* **P2S VPN (Mobile):** `172.18.12.0/24`
 
 ---
 
@@ -47,5 +46,10 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 ---
 
 ## 📂 Repository Structure
-* TBD
+
+* **`automation/`** — Houses the Infrastructure as Code (IaC) and configuration templates used to dynamically deploy or teardown the VPN mesh.
+    * `/templates` — Holds the VNet Gateway and Connection templates for dynamic deployment.
+    * `/scripts` — PowerShell scripts for dynamic tearing down and redeploying.
+* **`images/`** — Contains all visual documentation and network diagrams.
+    * `hybrid-mesh.png` — The primary full-mesh architecture diagram.
 ---
