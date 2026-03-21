@@ -48,14 +48,28 @@
                 "enableBgpRouteTranslationForNat": false,
                 "disableIPSecReplayProtection": false,
                 "sku": {
-                    "name": "Basic",
-                    "tier": "Basic"
+                    "name": "VpnGw1AZ",
+                    "tier": "VpnGw1AZ"
                 },
                 "gatewayType": "Vpn",
                 "vpnType": "RouteBased",
-                "enableBgp": false,
+                "enableBgp": true,
                 "enableHighBandwidthVpnGateway": false,
                 "activeActive": false,
+                "bgpSettings": {
+                    "asn": 65515,
+                    "bgpPeeringAddress": "192.168.100.158",
+                    "peerWeight": 0,
+                    "bgpPeeringAddresses": [
+                        {
+                            "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')), '/ipConfigurations/default')]",
+                            "customBgpIpAddresses": [
+                                "169.254.21.2",
+                                "169.254.22.2"
+                            ]
+                        }
+                    ]
+                },
                 "vpnGatewayGeneration": "Generation1",
                 "allowRemoteVnetTraffic": false,
                 "allowVirtualWanTraffic": false

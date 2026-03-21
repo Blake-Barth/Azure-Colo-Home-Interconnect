@@ -10,8 +10,8 @@
             "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/virtualNetworkGateways/SCUS-Interconnect-VNetGW",
             "type": "String"
         },
-        "localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_externalid": {
-            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/localNetworkGateways/SCUS-Interconnect-LocalNetworkGW",
+        "localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_Home_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/localNetworkGateways/SCUS-Interconnect-LocalNetworkGW-Home",
             "type": "String"
         }
     },
@@ -28,23 +28,39 @@
                     "properties": {}
                 },
                 "localNetworkGateway2": {
-                    "id": "[parameters('localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_externalid')]",
+                    "id": "[parameters('localNetworkGateways_SCUS_Interconnect_LocalNetworkGW_Home_externalid')]",
                     "properties": {}
                 },
                 "connectionType": "IPsec",
                 "connectionProtocol": "IKEv2",
                 "routingWeight": 0,
-                "enableBgp": false,
+                "enableBgp": true,
                 "useLocalAzureIpAddress": false,
                 "usePolicyBasedTrafficSelectors": false,
-                "ipsecPolicies": [],
+                "ipsecPolicies": [
+                    {
+                        "saLifeTimeSeconds": 27000,
+                        "saDataSizeKilobytes": 0,
+                        "ipsecEncryption": "AES256",
+                        "ipsecIntegrity": "SHA256",
+                        "ikeEncryption": "AES256",
+                        "ikeIntegrity": "SHA256",
+                        "dhGroup": "DHGroup14",
+                        "pfsGroup": "PFS2048"
+                    }
+                ],
                 "trafficSelectorPolicies": [],
                 "tunnelProperties": [],
                 "expressRouteGatewayBypass": false,
                 "enablePrivateLinkFastPath": false,
                 "dpdTimeoutSeconds": 45,
                 "connectionMode": "Default",
-                "gatewayCustomBgpIpAddresses": []
+                "gatewayCustomBgpIpAddresses": [
+                    {
+                        "ipConfigurationId": "[concat(parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_externalid'), '/ipConfigurations/default')]",
+                        "customBgpIpAddress": "169.254.21.2"
+                    }
+                ]
             }
         }
     ]
