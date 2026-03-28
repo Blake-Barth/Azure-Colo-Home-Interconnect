@@ -8,31 +8,49 @@ if ($null -eq $azContext) {
 
 $resourceGroupName = "Azure-Colo-Home-Interconnect"
 $containerName = "scus-interconnect-container"
-$vnetGatewayName = "SCUS-Interconnect-VNetGW"
-$connectionName = "SCUS-Interconnect-Connection-Home"
+$vpnGatewayName = "SCUS-Interconnect-VPNGW"
+$homeConnectionName = "SCUS-Interconnect-Connection-Home"
+$coloConnectionName = "SCUS-Interconnect-Connection-Colo"
 
-if (-not (Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue)) {
-    Write-Host "Creating Resource Group: $resourceGroupName" -ForegroundColor Yellow
-    New-AzResourceGroup -Name $resourceGroupName -Location "southcentralus"
-}
+Write-Host "Checking VPN Gateway status..." -ForegroundColor Cyan
+$vpnGW = Get-AzVirtualNetworkGateway -Name $vpnGatewayName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
 
-Write-Host "Checking VNet Gateway status..." -ForegroundColor Cyan
-$vnetGw = Get-AzVirtualNetworkGateway -Name $vnetGatewayName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
-
-if ($null -eq $vnetGw -or $vnetGw.ProvisioningState -ne "Succeeded") {
-    Write-Host "Deploying/Repairing VNet Gateway..." -ForegroundColor Yellow
+if ($null -eq $vpnGW -or $vpnGW.ProvisioningState -ne "Succeeded") {
+    Write-Host "Deploying/Repairing VPN Gateway..." -ForegroundColor Yellow
     New-AzResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
-        -TemplateFile "../templates/vnet_gateway.json" `
+        -TemplateFile "../templates/vpn_gateway.json" `
         -Mode Incremental
 } else {
-    Write-Host "VNet Gateway already exists and is healthy." -ForegroundColor Green
+    Write-Host "VPNGW Gateway already exists and is healthy." -ForegroundColor Green
 }
 
-Write-Host "Checking Connection status..." -ForegroundColor Cyan
-$connection = Get-AzVirtualNetworkGatewayConnection -Name $connectionName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
+Write-Host "Checking Colo Connection status..." -ForegroundColor Cyan
+$coloConnection = Get-AzVirtualNetworkGatewayConnection -Name $coloConnectionName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
 
-if ($null -eq $connection) {
+if ($null -eq $coloConnection) {
+    Write-Host "Deploying Home Connection..." -ForegroundColor Yellow
+    New-AzResourceGroupDeployment `
+        -ResourceGroupName $resourceGroupName `
+        -TemplateFile "../templates/colo_connection.json" `
+        -Mode Incremental
+    
+    Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan
+    $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Colo-Secret" -AsPlainText)
+
+    Set-AzVirtualNetworkGatewayConnectionSharedKey `
+        -Name $coloConnectionName `
+        -ResourceGroupName $resourceGroupName `
+        -Value $pskSecret `
+        -Force | Out-Null
+} else {
+    Write-Host "Colo connection already exists." -ForegroundColor Green
+}
+
+Write-Host "Checking Home Connection status..." -ForegroundColor Cyan
+$homeConnection = Get-AzVirtualNetworkGatewayConnection -Name $homeConnectionName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
+
+if ($null -eq $homeConnection) {
     Write-Host "Deploying Home Connection..." -ForegroundColor Yellow
     New-AzResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
@@ -43,12 +61,12 @@ if ($null -eq $connection) {
     $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Home-Secret" -AsPlainText)
 
     Set-AzVirtualNetworkGatewayConnectionSharedKey `
-        -Name $connectionName `
+        -Name $homeConnectionName `
         -ResourceGroupName $resourceGroupName `
         -Value $pskSecret `
         -Force | Out-Null
 } else {
-    Write-Host "Connection already exists." -ForegroundColor Green
+    Write-Host "Home connection already exists." -ForegroundColor Green
 }
 
  
