@@ -13,8 +13,8 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 
 ### Connectivity Breakdown
 * **Azure VNet:** `192.168.100.0/24`
-* **Colo DC:** `10.252.1.0/25`
-* **Home Lab:** `192.168.88.0/24`
+* **Colo DC:** `10.252.0.0/16`
+* **Home Lab:** `192.168.2.0/24`
 
 ---
 
@@ -39,7 +39,7 @@ This project implements a **Full Mesh** topology. While Azure typically acts as 
 - [X] Design network CIDR scheme (No overlaps)
 - [X] Create Azure VNet and Gateway
 - [X] Establish S2S Tunnel: Azure <-> Home Lab
-- [ ] Establish S2S Tunnel: Azure <-> Colo DC
+- [X] Establish S2S Tunnel: Azure <-> Colo DC
 - [ ] Configure P2S OpenVPN for iOS
 - [ ] Test cross-site latency and routing
 
