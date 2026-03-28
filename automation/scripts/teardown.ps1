@@ -6,14 +6,18 @@ if ($null -eq $azContext) {
 
 $resourceGroupName = "Azure-Colo-Home-Interconnect"
 $containerName = "scus-interconnect-container"
-$connectionName = "SCUS-Interconnect-Connection-Home"
-$gatewayName = "SCUS-Interconnect-VNetGW"
+$homeConnectionName = "SCUS-Interconnect-Connection-Home"
+$coloConnectionName = "SCUS-Interconnect-Connection-Colo"
+$gatewayName = "SCUS-Interconnect-VPNGW"
 
 Write-Host "Stopping Container: $containerName..." -ForegroundColor Magenta
 Stop-AzContainerGroup -ResourceGroupName $resourceGroupName -Name $containerName
 
-Write-Host "Removing VPN Connection: $connectionName..." -ForegroundColor Yellow
-Remove-AzVirtualNetworkGatewayConnection -Name $connectionName -ResourceGroupName $resourceGroupName -Force
+Write-Host "Removing VPN Connection: $homeConnectionName..." -ForegroundColor Yellow
+Remove-AzVirtualNetworkGatewayConnection -Name $homeConnectionName -ResourceGroupName $resourceGroupName -Force
+
+Write-Host "Removing VPN Connection: $coloConnectionName..." -ForegroundColor Yellow
+Remove-AzVirtualNetworkGatewayConnection -Name $coloConnectionName -ResourceGroupName $resourceGroupName -Force
 
 Write-Host "Removing VNet Gateway: $gatewayName..." -ForegroundColor Cyan
 Remove-AzVirtualNetworkGateway -Name $gatewayName -ResourceGroupName $resourceGroupName -Force

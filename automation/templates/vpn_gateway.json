@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualNetworkGateways_SCUS_Interconnect_VNetGW_name": {
-            "defaultValue": "SCUS-Interconnect-VNetGW",
+        "virtualNetworkGateways_SCUS_Interconnect_VPNGW_name": {
+            "defaultValue": "SCUS-Interconnect-VPNGW",
             "type": "String"
         },
         "publicIPAddresses_SCUS_Interconnect_PIP_externalid": {
@@ -19,8 +19,8 @@
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworkGateways",
-            "apiVersion": "2024-07-01",
-            "name": "[parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')]",
+            "apiVersion": "2025-05-01",
+            "name": "[parameters('virtualNetworkGateways_SCUS_Interconnect_VPNGW_name')]",
             "location": "southcentralus",
             "properties": {
                 "enablePrivateIpAddress": false,
@@ -31,7 +31,7 @@
                 "ipConfigurations": [
                     {
                         "name": "default",
-                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')), '/ipConfigurations/default')]",
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VPNGW_name')), '/ipConfigurations/default')]",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
@@ -62,7 +62,7 @@
                     "peerWeight": 0,
                     "bgpPeeringAddresses": [
                         {
-                            "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VNetGW_name')), '/ipConfigurations/default')]",
+                            "ipconfigurationId": "[concat(resourceId('Microsoft.Network/virtualNetworkGateways', parameters('virtualNetworkGateways_SCUS_Interconnect_VPNGW_name')), '/ipConfigurations/default')]",
                             "customBgpIpAddresses": [
                                 "169.254.21.2",
                                 "169.254.22.2"

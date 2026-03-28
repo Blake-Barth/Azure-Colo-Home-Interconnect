@@ -2,16 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "connections_SCUS_Interconnect_Connection_Home_name": {
-            "defaultValue": "SCUS-Interconnect-Connection-Home",
+        "connections_SCUS_Interconnect_Connection_Colo_name": {
+            "defaultValue": "SCUS-Interconnect-Connection-Colo",
             "type": "String"
         },
         "virtualNetworkGateways_SCUS_Interconnect_VPNGW_externalid": {
             "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/virtualNetworkGateways/SCUS-Interconnect-VPNGW",
             "type": "String"
         },
-        "localNetworkGateways_SCUS_Interconnect_LNGW_Home_externalid": {
-            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/localNetworkGateways/SCUS-Interconnect-LNGW-Home",
+        "localNetworkGateways_SCUS_Interconnect_LNGW_Colo_externalid": {
+            "defaultValue": "/subscriptions/13eb5256-bcb9-40a4-98ae-27f3f79e3a68/resourceGroups/Azure-Colo-Home-Interconnect/providers/Microsoft.Network/localNetworkGateways/SCUS-Interconnect-LNGW-Colo",
             "type": "String"
         }
     },
@@ -19,8 +19,8 @@
     "resources": [
         {
             "type": "Microsoft.Network/connections",
-            "apiVersion": "2025-05-01",
-            "name": "[parameters('connections_SCUS_Interconnect_Connection_Home_name')]",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('connections_SCUS_Interconnect_Connection_Colo_name')]",
             "location": "southcentralus",
             "properties": {
                 "virtualNetworkGateway1": {
@@ -28,13 +28,12 @@
                     "properties": {}
                 },
                 "localNetworkGateway2": {
-                    "id": "[parameters('localNetworkGateways_SCUS_Interconnect_LNGW_Home_externalid')]",
+                    "id": "[parameters('localNetworkGateways_SCUS_Interconnect_LNGW_Colo_externalid')]",
                     "properties": {}
                 },
                 "connectionType": "IPsec",
                 "connectionProtocol": "IKEv2",
                 "routingWeight": 0,
-                "authenticationType": "PSK",
                 "enableBgp": true,
                 "useLocalAzureIpAddress": false,
                 "usePolicyBasedTrafficSelectors": false,
@@ -59,7 +58,7 @@
                 "gatewayCustomBgpIpAddresses": [
                     {
                         "ipConfigurationId": "[concat(parameters('virtualNetworkGateways_SCUS_Interconnect_VPNGW_externalid'), '/ipConfigurations/default')]",
-                        "customBgpIpAddress": "169.254.21.2"
+                        "customBgpIpAddress": "169.254.22.2"
                     }
                 ]
             }
