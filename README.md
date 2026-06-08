@@ -74,7 +74,7 @@ Scripts live in `automation/scripts/` and resolve template paths from the script
 | `deploy.ps1` | **Full Mesh** | Deploy/repair VPN Gateway, both S2S connections (PSK from Key Vault), and start the container |
 | `deploy-without-colo.ps1` | **Home Only** | Full deploy except Azure→Colo; removes the Colo connection if it exists |
 | `deploy-without-home.ps1` | **Colo Only** | Full deploy except Azure→Home; removes the Home connection if it exists |
-| `teardown.ps1` | **No-Cost** | Stop container, remove both connections and the VPN Gateway |
+| `tear_down.ps1` | **No-Cost** | Stop container, remove both connections and the VPN Gateway |
 
 ### Examples
 
@@ -89,7 +89,7 @@ Scripts live in `automation/scripts/` and resolve template paths from the script
 ./automation/scripts/deploy-without-home.ps1
 
 # Tear down billable VPN resources
-./automation/scripts/teardown.ps1
+./automation/scripts/tear_down.ps1
 ```
 
 ---
@@ -124,7 +124,7 @@ automation/
 │   ├── deploy.ps1                  # Full mesh
 │   ├── deploy-without-colo.ps1     # Home-only (Azure isolation test)
 │   ├── deploy-without-home.ps1     # Colo-only (Azure isolation test)
-│   └── teardown.ps1                # No-cost state
+│   └── tear_down.ps1               # No-cost state
 └── templates/
     ├── vpn_gateway.json            # Gateway + BGP settings
     ├── home_connection.json        # Azure→Home S2S connection
