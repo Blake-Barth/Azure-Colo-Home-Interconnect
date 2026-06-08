@@ -130,5 +130,5 @@ automation/
     ├── home_connection.json        # Azure→Home S2S connection
     └── colo_connection.json        # Azure→Colo S2S connection
 images/
-└── hybrid-mesh.png                 # Collage of all deployment states
+└── deployment-states.png           # Collage of all deployment states
 ```

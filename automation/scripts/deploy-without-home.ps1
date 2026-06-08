@@ -36,7 +36,7 @@ if ($null -eq $coloConnection) {
         -ResourceGroupName $resourceGroupName `
         -TemplateFile (Join-Path $templatesDir "colo_connection.json") `
         -Mode Incremental
-    
+
     Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan
     $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Colo-Secret" -AsPlainText)
 
@@ -52,26 +52,13 @@ if ($null -eq $coloConnection) {
 Write-Host "Checking Home Connection status..." -ForegroundColor Cyan
 $homeConnection = Get-AzVirtualNetworkGatewayConnection -Name $homeConnectionName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
 
-if ($null -eq $homeConnection) {
-    Write-Host "Deploying Home Connection..." -ForegroundColor Yellow
-    New-AzResourceGroupDeployment `
-        -ResourceGroupName $resourceGroupName `
-        -TemplateFile (Join-Path $templatesDir "home_connection.json") `
-        -Mode Incremental
-    
-    Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan
-    $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Home-Secret" -AsPlainText)
-
-    Set-AzVirtualNetworkGatewayConnectionSharedKey `
-        -Name $homeConnectionName `
-        -ResourceGroupName $resourceGroupName `
-        -Value $pskSecret `
-        -Force | Out-Null
+if ($null -ne $homeConnection) {
+    Write-Host "Removing Home Connection..." -ForegroundColor Yellow
+    Remove-AzVirtualNetworkGatewayConnection -Name $homeConnectionName -ResourceGroupName $resourceGroupName -Force
 } else {
-    Write-Host "Home connection already exists." -ForegroundColor Green
+    Write-Host "Home connection already absent." -ForegroundColor Green
 }
 
- 
 Write-Host "Checking Container State..." -ForegroundColor Cyan
 $container = Get-AzContainerGroup -ResourceGroupName $resourceGroupName -Name $containerName -ErrorAction SilentlyContinue
 

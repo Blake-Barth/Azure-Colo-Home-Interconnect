@@ -30,23 +30,11 @@ if ($null -eq $vpnGW -or $vpnGW.ProvisioningState -ne "Succeeded") {
 Write-Host "Checking Colo Connection status..." -ForegroundColor Cyan
 $coloConnection = Get-AzVirtualNetworkGatewayConnection -Name $coloConnectionName -ResourceGroupName $resourceGroupName -ErrorAction SilentlyContinue
 
-if ($null -eq $coloConnection) {
-    Write-Host "Deploying Colo Connection..." -ForegroundColor Yellow
-    New-AzResourceGroupDeployment `
-        -ResourceGroupName $resourceGroupName `
-        -TemplateFile (Join-Path $templatesDir "colo_connection.json") `
-        -Mode Incremental
-    
-    Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan
-    $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Colo-Secret" -AsPlainText)
-
-    Set-AzVirtualNetworkGatewayConnectionSharedKey `
-        -Name $coloConnectionName `
-        -ResourceGroupName $resourceGroupName `
-        -Value $pskSecret `
-        -Force | Out-Null
+if ($null -ne $coloConnection) {
+    Write-Host "Removing Colo Connection..." -ForegroundColor Yellow
+    Remove-AzVirtualNetworkGatewayConnection -Name $coloConnectionName -ResourceGroupName $resourceGroupName -Force
 } else {
-    Write-Host "Colo connection already exists." -ForegroundColor Green
+    Write-Host "Colo connection already absent." -ForegroundColor Green
 }
 
 Write-Host "Checking Home Connection status..." -ForegroundColor Cyan
@@ -58,7 +46,7 @@ if ($null -eq $homeConnection) {
         -ResourceGroupName $resourceGroupName `
         -TemplateFile (Join-Path $templatesDir "home_connection.json") `
         -Mode Incremental
-    
+
     Write-Host "Fetching PSK from Key Vault..." -ForegroundColor Cyan
     $pskSecret = (Get-AzKeyVaultSecret -VaultName "SCUS-Interconnect-KVault" -Name "S2S-Home-Secret" -AsPlainText)
 
@@ -71,7 +59,6 @@ if ($null -eq $homeConnection) {
     Write-Host "Home connection already exists." -ForegroundColor Green
 }
 
- 
 Write-Host "Checking Container State..." -ForegroundColor Cyan
 $container = Get-AzContainerGroup -ResourceGroupName $resourceGroupName -Name $containerName -ErrorAction SilentlyContinue
 
