@@ -18,15 +18,6 @@ The diagram above is a collage of every connectivity state this project can oper
 | **Colo DC** | `10.252.0.0/16` |
 | **Home Lab** | `192.168.2.0/24` |
 
-### Connectivity States
-
-| State | Azure Resources | Use Case |
-| :--- | :--- | :--- |
-| **Full Mesh** | VPN Gateway + Azure→Home + Azure→Colo | Production — direct Home↔Colo primary, Azure secondary transit available |
-| **Home Only** | VPN Gateway + Azure→Home | Isolation test — Azure→Colo removed; Home↔Colo direct path remains primary |
-| **Colo Only** | VPN Gateway + Azure→Colo | Isolation test — Azure→Home removed; Home↔Colo direct path remains primary |
-| **No-Cost** | Gateway and connections removed, container stopped | Tear down billable VPN resources when not in use |
-
 ---
 
 ## Key Features
